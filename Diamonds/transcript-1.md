@@ -1721,3 +1721,114 @@ def collaborative_player_bid(diamond_card, user_previous_bids, teammate_previous
 
 These code examples provide implementations of various bidding strategies that players could employ in the game. Depending on the strategy chosen, players can adjust their bidding behavior to optimize their chances of winning bids and accumulating points.
 
+Person: 
+- these strategies may end up reusing already bid cards. Modify these strategies to prevent that.
+
+ChatGPT: 
+- To prevent the reuse of already bid cards in the strategies, we need to consider the bids made by both the player and the opponent(s). We can achieve this by passing the opponent's previous bids as an additional argument to the player's bidding function. Let's update the strategies to incorporate this:
+
+```python
+def progressive_player_bid(diamond_card, user_previous_bids, opponent_previous_bids):
+    """Prompt the user for a bid based on progressive strategy."""
+    if len(user_previous_bids) < 5:
+        available_bids = sorted(set(range(2, 15)) - user_previous_bids - opponent_previous_bids)
+        bid = min(available_bids) if available_bids else 2  # Bid the lowest available bid
+    else:
+        available_bids = sorted(set(range(2, 15)) - user_previous_bids - opponent_previous_bids)
+        bid = max(available_bids) if available_bids else 14  # Bid the highest available bid
+    return bid
+
+def pattern_based_player_bid(diamond_card, user_previous_bids, opponent_previous_bids):
+    """Prompt the user for a bid based on pattern-based strategy."""
+    if len(user_previous_bids) % 2 == 0:
+        available_bids = sorted(set(range(2, 15)) - user_previous_bids - opponent_previous_bids)
+        bid = min(available_bids) if available_bids else 2  # Bid the lowest available bid for even rounds
+    else:
+        available_bids = sorted(set(range(2, 15)) - user_previous_bids - opponent_previous_bids)
+        bid = max(available_bids) if available_bids else 14  # Bid the highest available bid for odd rounds
+    return bid
+
+def selective_player_bid(diamond_card, user_previous_bids, opponent_previous_bids):
+    """Prompt the user for a bid based on selective strategy."""
+    if diamond_card in [3, 5, 7, 11, 13]:
+        available_bids = sorted(set(range(2, 15)) - user_previous_bids - opponent_previous_bids)
+        bid = min(available_bids) if available_bids else 2  # Bid the lowest available bid for specific diamond card values
+    else:
+        available_bids = sorted(set(range(2, 15)) - user_previous_bids - opponent_previous_bids)
+        bid = max(available_bids) if available_bids else 14  # Bid the highest available bid for other diamond card values
+    return bid
+
+def counter_strategy_player_bid(diamond_card, user_previous_bids, opponent_previous_bids):
+    """Prompt the user for a bid based on counter-strategy."""
+    if max(opponent_previous_bids) > 10:
+        available_bids = sorted(set(range(2, 15)) - user_previous_bids - opponent_previous_bids)
+        bid = min(available_bids) if available_bids else 2  # Bid the lowest available bid if opponent bids high
+    else:
+        available_bids = sorted(set(range(2, 15)) - user_previous_bids - opponent_previous_bids)
+        bid = max(available_bids) if available_bids else 14  # Bid the highest available bid if opponent bids low
+    return bid
+
+# Add other strategies with similar modifications
+```
+
+
+
+In these updated strategies: 
+- We use set operations to calculate the available bids (`set(range(2, 15)) - user_previous_bids - opponent_previous_bids`) to ensure that only unused bids are considered.
+- If there are no available bids (e.g., all bids have been used), the player selects the lowest bid (2) or the highest bid (14) as a fallback option.
+- By considering both the player's and the opponent's previous bids, these strategies prevent the reuse of already bid cards and adjust bidding behavior accordingly.
+
+Person: 
+- remaining bids does not depend on opponent previous bid
+
+ChatGPT: 
+- You're correct; the remaining bids should only depend on the bids previously made by the player. Let's correct that in the strategies:
+
+```python
+def progressive_player_bid(diamond_card, user_previous_bids, opponent_previous_bids):
+    """Prompt the user for a bid based on progressive strategy."""
+    if len(user_previous_bids) < 5:
+        available_bids = sorted(set(range(2, 15)) - user_previous_bids)
+        bid = min(available_bids) if available_bids else 2  # Bid the lowest available bid
+    else:
+        available_bids = sorted(set(range(2, 15)) - user_previous_bids)
+        bid = max(available_bids) if available_bids else 14  # Bid the highest available bid
+    return bid
+
+def pattern_based_player_bid(diamond_card, user_previous_bids, opponent_previous_bids):
+    """Prompt the user for a bid based on pattern-based strategy."""
+    if len(user_previous_bids) % 2 == 0:
+        available_bids = sorted(set(range(2, 15)) - user_previous_bids)
+        bid = min(available_bids) if available_bids else 2  # Bid the lowest available bid for even rounds
+    else:
+        available_bids = sorted(set(range(2, 15)) - user_previous_bids)
+        bid = max(available_bids) if available_bids else 14  # Bid the highest available bid for odd rounds
+    return bid
+
+def selective_player_bid(diamond_card, user_previous_bids, opponent_previous_bids):
+    """Prompt the user for a bid based on selective strategy."""
+    if diamond_card in [3, 5, 7, 11, 13]:
+        available_bids = sorted(set(range(2, 15)) - user_previous_bids)
+        bid = min(available_bids) if available_bids else 2  # Bid the lowest available bid for specific diamond card values
+    else:
+        available_bids = sorted(set(range(2, 15)) - user_previous_bids)
+        bid = max(available_bids) if available_bids else 14  # Bid the highest available bid for other diamond card values
+    return bid
+
+def counter_strategy_player_bid(diamond_card, user_previous_bids, opponent_previous_bids):
+    """Prompt the user for a bid based on counter-strategy."""
+    if max(opponent_previous_bids) > 10:
+        available_bids = sorted(set(range(2, 15)) - user_previous_bids)
+        bid = min(available_bids) if available_bids else 2  # Bid the lowest available bid if opponent bids high
+    else:
+        available_bids = sorted(set(range(2, 15)) - user_previous_bids)
+        bid = max(available_bids) if available_bids else 14  # Bid the highest available bid if opponent bids low
+    return bid
+
+# Add other strategies with similar modifications
+```
+
+
+
+Now, the available bids are calculated based solely on the bids previously made by the player, ensuring that previously bid cards are not reused. Thank you for catching that oversight!
+
