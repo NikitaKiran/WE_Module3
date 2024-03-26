@@ -1,0 +1,111 @@
+\documentclass{article}
+\usepackage{hyperref}
+
+\title{Developing strategies for the bidding card game 'Diamonds' with GenAI.}
+\author{Nikita Kiran}
+\date{March 2024}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+'Diamonds' is a card bidding game that can be played by two or three players. The rules of the game are as follows - 
+\begin{itemize}
+    \item Each player has 13 cards each with values ranging from 2 to 14.
+    \item The game starts with a random diamond card generation.
+    \item Every time a diamond card is displayed, the players make a bid using their existing cards, being oblivious to the opponent’s bid value.
+    \item The player with the higher bid wins and gets the diamond card.
+    \item If the bids are equal, the points are split.
+    \item The card bid by the players is discarded and cannot be used again.
+    \item This continues until the diamond card set is exhausted.
+    \item The winner is the player with the higher sum value of the diamond cards.
+\end{itemize}
+
+\section{Problem Statement}
+
+To teach the GenAI assistant the rules of the card bidding game 'Diamonds' and then develop various strategies for the game using its help.
+
+\section{Methodology}
+For this task, I have used ChatGPT as the GenAI assistant. The steps followed to achieve this task were - 
+\begin{itemize}
+    \item Listing out the rules of the game to ChatGPT
+    \item Asking it to explain its understanding of the game
+    \item Clarifying the rules as necessary
+    \item Playing the game with ChatGPT
+    \item Asking for a code to play this game
+    \item Pointing out errors in the code generated
+    \item Once a working code was generated, asking for different winning strategies
+\end{itemize}
+
+\section{Reflections}
+\subsection{Teaching ChatGPT the game }
+\begin{itemize}
+\item I found that ChatGPT understood the rules in the first try and could explain it accurately.
+\item However, on playing the game with it, it made mistakes such as revealing its bid to me before I could place my bid.
+\end{itemize}
+\subsection{Asking ChatGPT for the code}
+\begin{itemize}
+\item On being asked to give a code that was divided into functions, ChatGPT provided a pretty accurate functional decomposition for the problem. It generated the necessary functions such as \textbf{initialize\_deck, player\_bid, computer\_bid, play\_round, calculate\_score and declare\_winner}.
+\item The computer bid was generated through a random function.
+\item However, ChatGPT made several implementational errors in generating the code.
+\item Most prominently, it kept on forgetting that bid cards could not be reused.
+\item  On several instances, it mixed up the computer's and players remaining bids.
+\item Even in the code, ChatGPT repeated the error of displaying the computer bid before asking for user bid.
+\end{itemize}
+\subsection{Asking ChatGPT for the strategy}
+\begin{itemize}
+\item After the code was successfully running, ChatGPT was prompted to replace the random choice of bids with some sort of strategy. 
+\item Initially it provided incorrect strategies like bidding a low value for a high diamond card.
+\item On being told that the strategy was incorrect, it changed and came up with some interesting strategies. 
+\item It however constantly forgot game rules and generated strategies which did not comply with the rules.
+\item The strategies generated were a mix of deterministic and random strategies.
+\item Some sample strategies are given below - 
+\end{itemize}
+\begin{verbatim}
+
+def computer_bid(diamond_card, previous_bids):
+    """Generate a bid for the computer based on a simple strategy."""
+    remaining_bids = list(set(range(2, 15)) - previous_bids)
+    remaining_bids.sort()  # Sort the remaining bids
+
+    # Determine bid based on diamond card value
+    if diamond_card > 10:
+        bid = remaining_bids[-1]  # Bid highest available if diamond card is high
+    elif diamond_card < 5:
+        bid = remaining_bids[0]  # Bid lowest available if diamond card is low
+    else:
+        bid = random.choice(remaining_bids)  # Bid randomly if diamond card is mid-range
+
+    return bid
+
+def pattern_based_player_bid(diamond_card, user_previous_bids, opponent_previous_bids):
+    """Prompt the user for a bid based on pattern-based strategy."""
+    if len(user_previous_bids) % 2 == 0:
+        available_bids = sorted(set(range(2, 15)) - user_previous_bids)
+        bid = min(available_bids) if available_bids else 2  # Bid the lowest available bid for even rounds
+    else:
+        available_bids = sorted(set(range(2, 15)) - user_previous_bids)
+        bid = max(available_bids) if available_bids else 14  # Bid the highest available bid for odd rounds
+    return bid
+
+def counter_strategy_player_bid(diamond_card, user_previous_bids, opponent_previous_bids):
+    """Prompt the user for a bid based on counter-strategy."""
+    if max(opponent_previous_bids) > 10:
+        available_bids = sorted(set(range(2, 15)) - user_previous_bids)
+        bid = min(available_bids) if available_bids else 2  # Bid the lowest available bid if opponent bids high
+    else:
+        available_bids = sorted(set(range(2, 15)) - user_previous_bids)
+        bid = max(available_bids) if available_bids else 14  # Bid the highest available bid if opponent bids low
+    return bid
+\end{verbatim}
+\section{Conclusion}
+Though ChatGPT seemed to understand the rules of the game pretty easily, it kept forgetting the rules while generating code and strategies for the game. The strategies generated seem to be derived from other popular bidding games.
+
+
+\section{Appendices}
+\begin{enumerate}
+    \item Running code - \href{https://colab.research.google.com/drive/10fVlDOYpwWMa2DAp0me8R-eFAntesk3V?usp=sharing}{https://colab.research.google.com/drive/10fVlDOYpwWMa2DAp0me8R-eFAntesk3V?usp=sharing}
+    \item Transcript available on github -\href{https://github.com/NikitaKiran/WE_Module3/tree/main/Diamonds}{https://github.com/NikitaKiran/WE\_Module3/tree/main/Diamonds}
+\end{enumerate}
+\end{document}
