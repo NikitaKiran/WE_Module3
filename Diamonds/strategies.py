@@ -19,7 +19,7 @@ class AdvancedStrategy:
         def apply(diamond_card, remaining_cards, remaining_opponent_cards, remaining_diamond_cards):
             if diamond_card in AdvancedStrategy.matching.keys():
                     return AdvancedStrategy.matching[diamond_card]
-            win_bids = [bid for bid in remaining_cards if bid > max(remaining_opponent_cards)]
+            win_bids = [bid for bid in remaining_cards if bid >= max(remaining_opponent_cards)]
             non_win = [bid for bid in remaining_cards if bid not in win_bids]
             lose_bids = [bid for bid in remaining_cards if bid < min(remaining_opponent_cards)]
             non_lose = [bid for bid in remaining_cards if bid not in lose_bids]
