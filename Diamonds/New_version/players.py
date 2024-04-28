@@ -24,7 +24,8 @@ class User(Player):
 
         def bid(self, diamond_card, opponent_cards, remaining_diamond_cards):
             value = select_card(self)
-            return super.bid(self, value)
+            self.remove_card(value)
+            return value
         
 class Computer(Player):
         def __init__(self, suit, strategy):
@@ -33,7 +34,8 @@ class Computer(Player):
         
         def bid(self, diamond_card, opponent_cards, remaining_diamond_cards):
             value = self.strategy.get_card_to_bid(diamond_card, self.cards, opponent_cards, remaining_diamond_cards)
-            return super.bid(self, value)
+            self.remove_card(value)
+            return value
         
 
              

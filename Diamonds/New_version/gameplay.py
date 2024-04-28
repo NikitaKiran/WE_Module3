@@ -60,8 +60,8 @@ class DiamondsGame:
             else:
             # Game Over
                 game_over = True
-                p1 = self.player1.points
-                p2 = self.player2.points   
+                p1 = self.player1.get_points()
+                p2 = self.player2.get_points()  
                 ui.display_text(screen, f"GAME OVER", (100, 350), (255, 255, 255), FONT)
                 ui.display_text(screen, f"Player 1(User) Points: {self.player1.points}", (100, 400), (255, 255, 255), FONT)
                 ui.display_text(screen, f"Player 2(Computer) Points: {self.player2.points}", (100, 430), (255, 255, 255), FONT) 
