@@ -1,11 +1,11 @@
 import random
 class RandomStrategy:
-    def apply(diamond_card, remaining_cards, remaining_opponent_cards, remaining_diamond_cards):
+    def get_card_to_bid(diamond_card, remaining_cards, remaining_opponent_cards, remaining_diamond_cards):
         # Implement the logic for the RandomStrategy here
         return random.choice(remaining_cards)
 
-class Strategy1:
-    def apply(diamond_card, remaining_cards, remaining_opponent_cards, remaining_diamond_cards):
+class SimpleStrategy:
+    def get_card_to_bid(diamond_card, remaining_cards, remaining_opponent_cards, remaining_diamond_cards):
         if diamond_card > 10:
             return max(remaining_cards)
         elif diamond_card < 5:
@@ -16,9 +16,7 @@ class Strategy1:
 class AdvancedStrategy:
         matching = {}
 
-        def apply(diamond_card, remaining_cards, remaining_opponent_cards, remaining_diamond_cards):
-            if diamond_card in AdvancedStrategy.matching.keys():
-                    return AdvancedStrategy.matching[diamond_card]
+        def get_card_to_bid(diamond_card, remaining_cards, remaining_opponent_cards, remaining_diamond_cards):
             win_bids = [bid for bid in remaining_cards if bid >= max(remaining_opponent_cards)]
             non_win = [bid for bid in remaining_cards if bid not in win_bids]
             lose_bids = [bid for bid in remaining_cards if bid < min(remaining_opponent_cards)]

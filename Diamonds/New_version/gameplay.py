@@ -1,5 +1,5 @@
 from players import User, Computer
-import ui
+import ui as ui
 from strategies import AdvancedStrategy
 import pygame
 from random import shuffle
@@ -10,22 +10,22 @@ class DiamondsGame:
         shuffle(self.diamonds)
         self.round = 1
         self.player1 = User('c')
-        self.player2 = Computer('h')
+        self.player2 = Computer('h', AdvancedStrategy)
 
     def play_round(self, screen, FONT):
         ui.display_text(screen, f"Round: {self.round}", (600, 10), (255, 255, 255), FONT)
-        ui.display_text(screen, f"Player 1(User) Points: {self.player1.points}", (100, 400), (255, 255, 255), FONT)
-        ui.display_text(screen, f"Player 2(Computer) Points: {self.player2.points}", (100, 430), (255, 255, 255), FONT)
+        ui.display_text(screen, f"Player 1(User) Points: {self.player1.get_points()}", (100, 400), (255, 255, 255), FONT)
+        ui.display_text(screen, f"Player 2(Computer) Points: {self.player2.get_points()}", (100, 430), (255, 255, 255), FONT)
         ui.display_text(screen, "Diamond card", (100, 215), (255, 255, 255), FONT)
         ui.draw_hand(screen, self.player1)
         diamond_card = self.diamonds.pop()
         ui.draw_card(screen, diamond_card, 100, 100, 'd')
-        player2_bid = self.player2.bid(AdvancedStrategy.apply(diamond_card, self.player2.cards, self.player1.cards, self.diamonds))
-        player1_bid = self.player1.bid()
+        player2_bid = self.player2.bid(diamond_card, self.player1.cards, self.diamonds)
+        player1_bid = self.player1.bid(diamond_card, self.player2.cards, self.diamonds)
         ui.display_text(screen, f"Your bid's worth : {player1_bid}", (400, 215), (255, 255, 255), FONT)
         ui.display_text(screen, f"Computer bid's worth: {player2_bid}", (800, 215), (255, 255, 255), FONT)
-        ui.draw_card(screen, player1_bid, 400, 100, self.player1.suit)
-        ui.draw_card(screen, player2_bid, 800, 100, self.player2.suit)
+        ui.draw_card(screen, player1_bid, 400, 100, self.player1.get_suit())
+        ui.draw_card(screen, player2_bid, 800, 100, self.player2.get_suit())
         
         if player1_bid > player2_bid:
             self.player1.add_points(diamond_card)
