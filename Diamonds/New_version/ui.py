@@ -35,8 +35,7 @@ def draw_hand(screen, player):
 
 def select_card(player):
     card_spacing = 82
-    selected_card = None
-    while not selected_card:
+    while True:
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 pos = pygame.mouse.get_pos()
